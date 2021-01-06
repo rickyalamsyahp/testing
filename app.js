@@ -49,13 +49,14 @@ app.use(
   "/sb-admin-2",
   express.static(path.join(__dirname, "node_modules/startbootstrap-sb-admin-2"))
 );
-app.use(cors());
+
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 // admin
 app.use("/admin", adminRouter);
 app.use("/api/v1/member", apiRouter);
+app.use(cors());
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
