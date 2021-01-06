@@ -2,13 +2,13 @@ const Category = require("../models/Category");
 const Bank = require("../models/Bank");
 const Item = require("../models/Item");
 const Image = require("../models/Image");
-const fs = require("fs-extra");
-const path = require("path");
 const Feature = require("../models/Feature");
 const Activity = require("../models/Activity");
 const Booking = require("../models/Booking");
 const Member = require("../models/Member");
 const Users = require("../models/Users");
+const fs = require("fs-extra");
+const path = require("path");
 const bcrypt = require("bcryptjs");
 
 module.exports = {
@@ -79,7 +79,6 @@ module.exports = {
     }
   },
 
-  //Category
   viewCategory: async (req, res) => {
     try {
       const category = await Category.find();
@@ -96,6 +95,7 @@ module.exports = {
       res.redirect("/admin/category");
     }
   },
+
   addCategory: async (req, res) => {
     try {
       const { name } = req.body;
@@ -110,6 +110,7 @@ module.exports = {
       res.redirect("/admin/category");
     }
   },
+
   editCategory: async (req, res) => {
     try {
       const { id, name } = req.body;
@@ -125,6 +126,7 @@ module.exports = {
       res.redirect("/admin/category");
     }
   },
+
   deleteCategory: async (req, res) => {
     try {
       const { id } = req.params;
@@ -140,7 +142,6 @@ module.exports = {
     }
   },
 
-  //Bank
   viewBank: async (req, res) => {
     try {
       const bank = await Bank.find();
@@ -159,6 +160,7 @@ module.exports = {
       res.redirect("/admin/bank");
     }
   },
+
   addBank: async (req, res) => {
     try {
       const { name, nameBank, nomorRekening } = req.body;
@@ -177,6 +179,7 @@ module.exports = {
       res.redirect("/admin/bank");
     }
   },
+
   editBank: async (req, res) => {
     try {
       const { id, name, nameBank, nomorRekening } = req.body;
@@ -206,6 +209,7 @@ module.exports = {
       res.redirect("/admin/bank");
     }
   },
+
   deleteBank: async (req, res) => {
     try {
       const { id } = req.params;
@@ -222,12 +226,12 @@ module.exports = {
     }
   },
 
-  //item
   viewItem: async (req, res) => {
     try {
       const item = await Item.find()
         .populate({ path: "imageId", select: "id imageUrl" })
         .populate({ path: "categoryId", select: "id name" });
+
       const category = await Category.find();
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
@@ -422,7 +426,6 @@ module.exports = {
       res.redirect(`/admin/item/show-detail-item/${itemId}`);
     }
   },
-
   addFeature: async (req, res) => {
     const { name, qty, itemId } = req.body;
 
@@ -585,7 +588,6 @@ module.exports = {
     }
   },
 
-  //booking
   viewBooking: async (req, res) => {
     try {
       const booking = await Booking.find()

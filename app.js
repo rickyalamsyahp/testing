@@ -6,7 +6,7 @@ var logger = require("morgan");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const flash = require("connect-flash");
-var cors = require("cors");
+const cors = require("cors");
 //import mongoose
 const mongoose = require("mongoose");
 mongoose.connect(
@@ -18,6 +18,10 @@ mongoose.connect(
     useFindAndModify: false,
   }
 );
+var corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -25,16 +29,9 @@ var usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 const apiRouter = require("./routes/api");
 
-var app = express();
+app.use(cors(corsOptions));
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -84,3 +81,6 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+
+
