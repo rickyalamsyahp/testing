@@ -5,6 +5,7 @@
       <div class="row">
         <div class="col-md-5">
           <form action="/admin/item/add/activity" method="POST" enctype="multipart/form-data">
+
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" class="form-control" name="name" placeholder="Enter name" required>
@@ -40,7 +41,7 @@
                   <td><%= activity[i].name %></td>
                   <td><%= activity[i].type %></td>
                   <td>
-                    <img src="https://admin-staycation-ricky.herokuapp.com/<%= activity[i].imageUrl %>" alt="imageUrl"
+                    <img src="https://admin-staycation.herokuapp.com/<%= activity[i].imageUrl %>" alt="imageUrl"
                       width="70px">
                   </td>
                   <td>

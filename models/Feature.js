@@ -4,20 +4,20 @@ const { ObjectId } = mongoose.Schema;
 const featureSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   qty: {
     type: Number,
-    required: true,
+    required: true
   },
   imageUrl: {
     type: String,
-    required: true,
+    required: true
   },
   itemId: {
     type: ObjectId,
-    ref: "Item",
-  },
-});
+    ref: 'Item'
+  }
+})
 
-module.exports = mongoose.model("Feature", featureSchema);
+module.exports = mongoose.model('Feature', featureSchema)
