@@ -2,8 +2,6 @@
 
 <h1 align="center">Membuat Website Mencari Kosan/Hotel/Apartment dengan MERN Stack</h1>
 
-
-
 MERN Stack Development adalah salah satu techstack yang banyak digunakan oleh web developer saat ini. Mengandalkan ReactJS dalam membuat website lebih interactive dan easy to maintain.
 
 Kita juga akan menggunakan NodeJS dan ExpressJS untuk handle bagian back-end terutama dalam pembuatan suatu API.
@@ -277,14 +275,14 @@ Dengan mengikuti kelas online ini, kalian mendapatkan akses ke serangkaian video
 6. Materi dari Dasar (tidak perlu khawatir, semua bisa belajar)
 7. Semua tools yang diperlukan gratis / open-source
 
-### Info Lebih Lengkap
-Website : [www.eudeka.id](https://www.eudeka.id)  
-Twitter: [@EudekaID](https://twitter.com/EudekaID)  
-Telegram : [@eudekainfo](https://t.me/eudekainfo)  
-Instagram : [@eudeka.id](https://instagram.com/eudeka.id)  
-WhatsApp : [0895351577557](https://wa.me/62895351577557)  
-Email : [info@eudeka.id](mailto:info@eudeka.id)  
 
+### Info Lebih Lengkap
+Website : [www.buildwithangga.com](https://buildwithangga.com/)  
+Instagram : [@codeathome](https://www.instagram.com/codeathome/)  
+WhatsApp : [085955316973](https://wa.me/6285955316973)  
+github backend : [codeathome-dev](https://github.com/codeathome-dev)  
 ---
+
+
 
 ###### tags: `mern` `classbwa` `codeathome`
