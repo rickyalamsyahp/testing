@@ -9,12 +9,15 @@ const flash = require('connect-flash');
 const cors = require('cors');
 // import mongoose
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://codeathome:bwamern@cluster0-40j6e.mongodb.net/db_staycation?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
+mongoose.connect(
+  "mongodb+srv://rickyAlamsyah:Salsaricky8511@cluster0.fvm5i.mongodb.net/db_staycation?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  }
+);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
