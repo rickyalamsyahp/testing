@@ -10,7 +10,7 @@ const cors = require('cors');
 // import mongoose
 const mongoose = require('mongoose');
 mongoose.connect(
-  "mongodb+srv://rickyAlamsyah:Salsaricky8511@cluster0.fvm5i.mongodb.net/db_staycation?retryWrites=true&w=majority",
+  "mongodb://localhost:27017/testApi",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -22,7 +22,7 @@ mongoose.connect(
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // router admin
-const adminRouter = require('./routes/admin');
+// const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api');
 
 var app = express();
@@ -49,8 +49,8 @@ app.use('/sb-admin-2', express.static(path.join(__dirname, 'node_modules/startbo
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 // admin
-app.use('/admin', adminRouter);
-app.use('/api/v1/member', apiRouter);
+// app.use('/admin', adminRouter);
+app.use('/api/v1', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

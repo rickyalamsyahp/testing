@@ -2,26 +2,24 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const usersSchema = new mongoose.Schema({
-  username: {
+  nama: {
     type: String,
-    required: true
+  },
+  alamat: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+  noPegawaiPertamina: {
+    type: String,
+  },
+  noTlpn: {
+    type: String,
   },
   password: {
     type: String,
-    required: true
   },
-  role: {
-    type: String,
-    required: true,
-    default: 'guest'
-  }
-})
-
-usersSchema.pre('save', async function (next) {
-  const user = this;
-  if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
-  }
 })
 
 module.exports = mongoose.model('Users', usersSchema)

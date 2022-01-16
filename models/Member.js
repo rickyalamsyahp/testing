@@ -1,21 +1,32 @@
 const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema({
-  firstName: {
+  foto: {
     type: String,
-    required: true
   },
-  lastName: {
+  namalengkap: {
     type: String,
-    required: true
   },
   email: {
     type: String,
-    required: true
   },
-  phoneNumber: {
+  nomerAnggota: {
     type: String,
-    required: true
+  },
+  nomerTelepon: {
+    type: String,
+  },
+  nomerPegawaiPertamina: {
+    type: String,
+  },
+  noKtp: {
+    type: String,
+  },
+  tanggalLahir: {
+    type: String,
+  },
+  fotoKtp: {
+    type: String,
   }
 })
 
