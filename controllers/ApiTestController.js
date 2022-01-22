@@ -37,6 +37,7 @@ module.exports = {
                   .catch((err) => {
                     res.status(500).json({ message: err });
                   });
+                  1
               }
             });
           } else {
@@ -53,8 +54,8 @@ module.exports = {
 
   actionSignin: async (req, res) => {
     try {
-      const { username, password } = req.body;
-      const user = await Users.findOne({ username: username });
+      const { email, password } = req.body;
+      const user = await Users.findOne({ email: email });
       if (user) {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (isPasswordMatch) {
@@ -112,24 +113,7 @@ module.exports = {
     }
   },
 
-  // updateOneGaleri: async (req, res) => {
-  //   try {
-  //     const {
-  //       id,
-  //     } = req.params;
-  //     const updateOne = await Galeri.findOne({ _id: id });
-  //     // await fs.unlink(path.join(`public/${updateOne.imageUrl}`));
-  //       updateOne.imageUrl = `image/${req.files.filename}`
-  //       await updateOne.save();
-  //       res.status(200).json({
-  //         message: "Data Berhasil Terupdate",
-  //         update,
-  //       });
 
-  //   } catch (error) {
-  //     res.status(500).json({ message: "internal error", error});
-  //   }
-  // },
 
   deleteGaleri: async (req, res) => {
     try {
@@ -298,6 +282,17 @@ module.exports = {
   ViewDataProfile: async (req, res) => {
     try {
       const member = await Member.find();
+      res.status(200).json({
+        data: member,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+  ViewDataProfileById: async (req, res) => {
+    try {
+
+      const member = await Member.find({_id: req.params.id});
       res.status(200).json({
         data: member,
       });
