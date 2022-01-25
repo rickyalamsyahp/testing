@@ -88,16 +88,11 @@ module.exports = {
           imageUrl: `images/${file.filename}`,
         });
         await newUpload.save();
-
-        res.status(200).json({
-          data: imageSave,
-        });
       })
     )
-      .then(res.status(201).json("files successfully uploaded"))
+      .then(res.status(201).json("Gambar berhasil di upload"))
       .catch((e) => {
-        res
-          .status(500)
+        res.status(500)
           .json({ message: "Something went wrong in /uploads/img", error: e });
       });
   },
