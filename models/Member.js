@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const memberSchema = new mongoose.Schema({
   foto: {
     type: String,
   },
-  namalengkap: {
+  nama: {
     type: String,
   },
   email: {
@@ -27,7 +28,11 @@ const memberSchema = new mongoose.Schema({
   },
   fotoKtp: {
     type: String,
-  }
+  },
+  setoranId: [{
+    type: ObjectId,
+    ref: 'SetoranWajib'
+  }]
 })
 
 module.exports = mongoose.model('Member', memberSchema)

@@ -21,7 +21,7 @@ module.exports = {
         noPegawaiPertamina: noPegawaiPertamina,
         noTlpn: noTlpn,
       });
-      await Users.findOne({ nama: newUser.nama })
+      await Users.findOne({ email: newUser.email })
         .then(async (profile) => {
           if (!profile) {
             bcrypt.hash(newUser.password, 10, async (err, hash) => {
@@ -29,19 +29,25 @@ module.exports = {
                 console.log("Error is", err.message);
               } else {
                 newUser.password = hash;
+                let test = await Member.create({
+                  nama: newUser.nama,
+                  alamat: newUser.nama,
+                  email: newUser.email,
+                  nomerPegawaiPertamina: newUser.noPegawaiPertamina,
+                  nomerTelepon: newUser.noTlpn,
+                });
                 await newUser
                   .save()
                   .then(() => {
-                    res.status(200).send(newUser);
+                    res.status(200).send(test);
                   })
                   .catch((err) => {
                     res.status(500).json({ message: err });
                   });
-                  1
               }
             });
           } else {
-            res.send("User already exists...");
+            res.status(500).json({ message: "User already exists..." });
           }
         })
         .catch((err) => {
@@ -56,17 +62,19 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const user = await Users.findOne({ email: email });
+      const member = await Member.findOne({ email: email });
       if (user) {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (isPasswordMatch) {
           res.status(200).json({
             message: "Login successful",
             data: {
-              nama: user.nama,
-              alamat: user.alamat,
-              email: user.email,
-              noPegawaiPertamina: user.noPegawaiPertamina,
-              noTlpn: user.noTlpn,
+              nama: member.nama,
+              alamat: member.alamat,
+              email: member.email,
+              noPegawaiPertamina: member.nomerPegawaiPertamina,
+              noTlpn: member.nomerTelepon,
+              id: member._id,
             },
           });
         } else {
@@ -92,7 +100,8 @@ module.exports = {
     )
       .then(res.status(201).json("Gambar berhasil di upload"))
       .catch((e) => {
-        res.status(500)
+        res
+          .status(500)
           .json({ message: "Something went wrong in /uploads/img", error: e });
       });
   },
@@ -107,8 +116,6 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
-
-
 
   deleteGaleri: async (req, res) => {
     try {
@@ -128,11 +135,15 @@ module.exports = {
   //Setoran Wajib
   addSetoranWajib: async (req, res) => {
     try {
-      const { tanggal, deskripsi } = req.body;
-      await SetoranWajib.create({
+      const { tanggal, deskripsi, memberId } = req.body;
+      let setoran = await SetoranWajib.create({
         tanggal: tanggal,
         deskripsi: deskripsi,
+        memberId: memberId,
       });
+      const item = await Member.findOne({ _id: memberId });
+      item.setoranId.push({ _id: setoran._id });
+      await item.save();
       res.status(200).json({
         message: "Data Berhasil Ditambah",
       });
@@ -144,15 +155,28 @@ module.exports = {
 
   ViewSetoranWajib: async (req, res) => {
     try {
-      const setoranWajib = await SetoranWajib.find();
+      const setoranWajib = await SetoranWajib.find()
+      .populate({ path: 'memberId', select: 'id nama' });
       res.status(200).json({
-        data: setoranWajib,
+        setoranWajib,
       });
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }
   },
 
+  ViewSetoranWajibByUser: async (req, res) => {
+    try {
+      const { id }= req.params;
+      const setoranWajib = await SetoranWajib.findOne({memberId: id})
+      .populate({ path: 'memberId', select: 'id nama' });
+      res.status(200).json({
+       setoranWajib,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
   updateOneSetoranWajib: async (req, res) => {
     try {
       const { id, tanggal, deskripsi } = req.body;
@@ -276,7 +300,8 @@ module.exports = {
   //profile
   ViewDataProfile: async (req, res) => {
     try {
-      const member = await Member.find();
+      const member = await Member.find()
+       .populate({ path: 'setoranId', select: 'id tanggal deskripsi' });
       res.status(200).json({
         data: member,
       });
@@ -286,11 +311,9 @@ module.exports = {
   },
   ViewDataProfileById: async (req, res) => {
     try {
-
-      const member = await Member.find({_id: req.params.id});
-      res.status(200).json({
-        data: member,
-      });
+      const member = await Member.findOne({ _id: req.params.id })
+      .populate({ path: 'setoranId', select: 'id tanggal deskripsi' });
+      res.status(200).json(member);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
     }
@@ -299,20 +322,20 @@ module.exports = {
   updateDataProfile: async (req, res) => {
     try {
       const {
-        namalengkap,
+        nama,
         email,
         nomerAnggota,
         nomerTelepon,
-        nomerPegawaiPertamina,
+        noPegawaiPertamina,
         noKtp,
         tanggalLahir,
       } = req.body;
       const newItem = {
-        namalengkap,
+        nama,
         email,
         nomerAnggota,
         nomerTelepon,
-        nomerPegawaiPertamina,
+        noPegawaiPertamina,
         noKtp,
         tanggalLahir,
         fotoKtp: `image/${req.files.imageKtp[0].filename}`,
@@ -332,7 +355,7 @@ module.exports = {
     try {
       const {
         id,
-        namalengkap,
+        nama,
         email,
         nomerAnggota,
         nomerTelepon,
@@ -341,8 +364,9 @@ module.exports = {
         tanggalLahir,
       } = req.body;
       const updateOne = await Member.findOne({ _id: id });
-      if (req.file == undefined) {
-        updateOne.namalengkap = namalengkap;
+      if (req.files === undefined) {
+        console.log("masuk sini");
+        updateOne.nama = nama;
         updateOne.email = email;
         updateOne.nomerAnggota = nomerAnggota;
         updateOne.nomerTelepon = nomerTelepon;
@@ -355,9 +379,10 @@ module.exports = {
           updateOne,
         });
       } else {
-        await fs.unlink(path.join(`public/${updateOne.fotoKtp}`));
-        await fs.unlink(path.join(`public/${updateOne.foto}`));
-        updateOne.namalengkap = namalengkap;
+        console.log("masuk sini cuy");
+        // await fs.unlink(path.join(`public/${updateOne.fotoKtp}`));
+        // await fs.unlink(path.join(`public/${updateOne.foto}`));
+        updateOne.nama = nama;
         updateOne.email = email;
         updateOne.nomerAnggota = nomerAnggota;
         updateOne.nomerTelepon = nomerTelepon;
@@ -365,11 +390,11 @@ module.exports = {
         updateOne.noKtp = noKtp;
         updateOne.tanggalLahir = tanggalLahir;
         updateOne.fotoKtp = `image/${req.files.imageKtp[0].filename}`;
-        (updateOne.foto = `image/${req.files.fotoProfile[0].filename}`),
+        updateOne.foto = `image/${req.files.fotoProfile[0].filename}`;  
           await updateOne.save();
         res.status(200).json({
           message: "Data Berhasil Terupdate",
-          update,
+          updateOne,
         });
       }
     } catch (error) {

@@ -9,6 +9,7 @@ router.delete('/galeri/:id', apiController.deleteGaleri);
 //setoran wajib
 router.post('/setoranwajib', apiController.addSetoranWajib);
 router.get('/setoranwajib', apiController.ViewSetoranWajib);
+router.get('/setoranwajib/:id', apiController.ViewSetoranWajibByUser);
 router.put('/setoranwajib', apiController.updateOneSetoranWajib);
 router.delete('/setoranwajib/:id', apiController.deleteSetoranWajib);
 //login
