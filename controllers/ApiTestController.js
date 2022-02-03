@@ -6,6 +6,7 @@ const Galeri = require("../models/Galeri");
 const SetoranWajib = require("../models/SetoranWajib");
 const FormDaftar = require("../models/FormDaftar");
 const Member = require("../models/Member");
+const SetoranPokok = require("../models/SetoranPokok");
 
 module.exports = {
   //crud sign
@@ -75,6 +76,7 @@ module.exports = {
               noPegawaiPertamina: member.nomerPegawaiPertamina,
               noTlpn: member.nomerTelepon,
               id: member._id,
+              idUser: user._id
             },
           });
         } else {
@@ -82,6 +84,26 @@ module.exports = {
         }
       } else {
         res.status(401).json({ error: "User does not exist" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  changePassword: async (req, res) =>{
+    try {
+      const {id} = req.params;
+      const password = await bcrypt.hash(req.body.newPassword, 10);
+      const userPassword = await Users.findOne({_id: id});
+      const isPasswordMatch = await bcrypt.compare(req.body.newPassword, userPassword.password);
+      if(isPasswordMatch){
+        res.status(400).json({ error: "Password baru tida boleh sama dengan password lama"})
+      }else if (req.body.newPassword !== req.body.confirmNewPassword  ) {
+        res.status(400).json({ message: "Confirmasi password tidak sama"})
+      } else if (req.body.newPassword === req.body.confirmNewPassword &&req.body.newPassword !==isPasswordMatch  ) {
+        userPassword.password = password;
+        await userPassword.save();
+        res.status(200).json({ message: "Password berhasil berubah"})
       }
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -193,10 +215,72 @@ module.exports = {
     }
   },
 
-  deleteSetoranWajib: async (req, res) => {
+  
+  //Setoran Pokok
+  addSetoranPokok: async (req, res) => {
+    try {
+      const { tanggal, deskripsi, memberId } = req.body;
+      let setoran = await SetoranPokok.create({
+        tanggal: tanggal,
+        deskripsi: deskripsi,
+        memberId: memberId,
+      });
+      const item = await Member.findOne({ _id: memberId });
+      item.setoranPokokId.push({ _id: setoran._id });
+      await item.save();
+      res.status(200).json({
+        message: "Data Berhasil Ditambah",
+      });
+    } catch (error) {
+      res.send(error.message);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  ViewSetoranPokok: async (req, res) => {
+    try {
+      const setoranWajib = await SetoranPokok.find()
+      .populate({ path: 'memberId', select: 'id nama' });
+      res.status(200).json({
+        setoranWajib,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  ViewSetoranPokokByUser: async (req, res) => {
+    try {
+      const { id }= req.params;
+      const setoranPokok = await SetoranPokok.findOne({memberId: id})
+      .populate({ path: 'memberId', select: 'id nama' });
+      res.status(200).json({
+        setoranPokok,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+  updateOneSetoranPokok: async (req, res) => {
+    try {
+      const { id, tanggal, deskripsi } = req.body;
+      const updateOne = await SetoranPokok.findOne({ _id: id });
+      updateOne.tanggal = tanggal;
+      updateOne.deskripsi = deskripsi;
+      await updateOne.save();
+      res.status(200).json({
+        message: "Data Berhasil Terupdate",
+        updateOne,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "internal error", error });
+    }
+  },
+
+  deleteSetoraPokok: async (req, res) => {
     try {
       const { id } = req.params;
-      const setoranWajib = await SetoranWajib.findOne({ _id: id });
+      const setoranWajib = await SetoranPokok.findOne({ _id: id });
       // await fs.unlink(path.join(`public/${member.fotoKtp}`));
       // await fs.unlink(path.join(`public/${member.foto}`));
       await setoranWajib.remove();
@@ -312,7 +396,8 @@ module.exports = {
   ViewDataProfileById: async (req, res) => {
     try {
       const member = await Member.findOne({ _id: req.params.id })
-      .populate({ path: 'setoranId', select: 'id tanggal deskripsi' });
+      .populate({ path: 'setoranId', select: 'id tanggal deskripsi' })
+      .populate({ path: 'setoranPokokId', select: 'id tanggal deskripsi' });
       res.status(200).json(member);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });

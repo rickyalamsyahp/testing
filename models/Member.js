@@ -32,6 +32,11 @@ const memberSchema = new mongoose.Schema({
   setoranId: [{
     type: ObjectId,
     ref: 'SetoranWajib'
+  }],
+
+  setoranPokokId: [{
+    type: ObjectId,
+    ref: 'SetoranPokok'
   }]
 })
 
