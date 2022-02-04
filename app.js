@@ -26,7 +26,7 @@ var app = express();
 
 app.use(
   cors({
-    origin: "https://server-tugasakhir.herokuapp.com",
+    origin: "https://server-tugasakhir.herokuapp.com/api/v1/sign",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
   })
 );
