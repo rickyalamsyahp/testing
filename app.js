@@ -9,15 +9,15 @@ const flash = require("connect-flash");
 const cors = require("cors");
 // import mongoose
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/testApi", {
+mongoose.connect("mongodb+srv://trustOne:Qwerty123@cluster0.jhzuc.mongodb.net/db_tugasAkhir?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+// var indexRouter = require("./routes/index");
+// var usersRouter = require("./routes/users");
 // router admin
 // const adminRouter = require('./routes/admin');
 const apiRouter = require("./routes/api");
