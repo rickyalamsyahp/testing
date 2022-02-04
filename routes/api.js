@@ -34,4 +34,7 @@ router.get('/member/:id', apiController.ViewDataProfileById)
 router.post('/member', uploadSingle, apiController.updateDataProfile)
 router.put('/member', uploadSingle, apiController.updateOneDataProfile)
 router.delete('/member/:id', apiController.deleteDataProfile)
+//saran
+router.post('/saran',apiController.addSaran)
+router.delete('/saran/:id', apiController.deleteSaran)
 module.exports = router;

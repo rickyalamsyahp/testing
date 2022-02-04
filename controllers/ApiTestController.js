@@ -7,6 +7,8 @@ const SetoranWajib = require("../models/SetoranWajib");
 const FormDaftar = require("../models/FormDaftar");
 const Member = require("../models/Member");
 const SetoranPokok = require("../models/SetoranPokok");
+const Saran = require("../models/Saran");
+
 
 module.exports = {
   //crud sign
@@ -499,6 +501,39 @@ module.exports = {
       });
     } catch (error) {
       res.status(500).json({ message: "internal error", error });
+    }
+  },
+
+  //saran
+  addSaran: async (req, res) => {
+    try {
+      const { saran } = req.body;
+      let addsaran = await Saran.create({
+       saran: saran,
+      });
+      res.status(200).json({
+        message: "Data Berhasil Ditambah",
+        data: addsaran
+      });
+    } catch (error) {
+      res.send(error.message);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  deleteSaran: async (req, res) => {
+    try {
+      const { id } = req.params;
+      let addsaran = await Saran.findOne({
+       _id: id,
+      });
+      await addsaran.remove();
+      res.status(200).json({
+        message: "Data Berhasil DiHapus"
+      });
+    } catch (error) {
+      res.send(error.message);
+      res.status(500).json({ message: "Internal server error" });
     }
   },
 };
